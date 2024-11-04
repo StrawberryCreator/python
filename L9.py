@@ -6,6 +6,9 @@ t.bgcolor ("black")
 def user_move ():
     user.forward (15)
 
+def move_bot () :
+    activeBot.forward (r.randint (1, 25))
+
 #create player
 user = t.Turtle ()
 user.shape ("turtle")
@@ -26,14 +29,24 @@ for x in colors:
     bot.goto (-200, yPos)
     yPos -= 100
 
-while True:
+t.onkey (user_move, "space")
+t.listen ()
+
+won = False
+while not won: 
     for activeBot in bots:
-        activeBot.forward (r.randint (1, 20))
-    t.onkey (user_move, "space")
-    t.listen ()
-    if activeBot.xcor () >= 200:
-        break
-    if user.xcor () >= 200:
-        break
+        move_bot ()
+        if activeBot.xcor () >= 200:
+            won = True
+            winner = activeBot.color () [0]
+            break
+        if user.xcor () >= 200:
+            won = True
+            winner = "white"
+            break
+
+if winner:
+    t.color ("white")
+    t.write ("The " + winner + " turtle wins!", font= ("Ariel", 20, "bold"))
 
 t.mainloop ()
