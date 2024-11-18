@@ -30,53 +30,75 @@ apple.penup ()
 apple.goto (100, 100)
 
 
-def W ():
-    y = snake.ycor ()
-    snake.sety (y + 20)
-    check ()
-
-def A ():
-    x = snake.xcor ()
-    snake.setx (x - 20)
-    check ()
-
-def S ():
-    y = snake.ycor ()
-    snake.sety (y - 20)
-    check ()
-
-def D ():
-    x = snake.xcor ()
-    snake.setx (x + 20)
-    check ()
-
 def check ():
-    global tails
-    global pastX
-    pastX += [snake.xcor ()]
-    pastX.remove [len(tails)-1]
-    global pastY
-    pastY += (snake.ycor ())
-    if snake.distance (apple) < 20:
-        appleRand ()
-        global score
-        score += 1
-        t.clear ()
-        t.write (score, font= ("Arial", 40, "normal"))
-        tails += [t.Turtle ()]
-        tails[len(tails)-1].shape ("square")
-        tails[len(tails)-1].color ("gray")
-        tails[len(tails)-1].penup ()
-        tails[len(tails)-1].speed (0)
+     global tails
+     if snake.distance (apple) < 20:
+          appleRand ()
+          global score
+          score += 1
+          t.clear ()
+          t.write (score, font= ("Arial", 40, "normal"))
+          new_tail = t.Turtle ()
+          new_tail.shape ("square")
+          new_tail.color ("gray")
+          new_tail.penup ()
+          tails.append (new_tail)
+          print (len(tails))
+          for i in range (len(tails)-1, 0,-1) :
+               x = tails [i-1].xcor ()
+               y = tails [i-1].ycor ()
+               tails[i].goto (x,y)
+          if (len(tails) > 0) :
+              x = snake.xcor ()
+              y = snake.ycor ()
+              tails [0].goto (x,y)
+        
         
     
 def appleRand ():
     apple.goto (round(r.randint (-200, 200)/20)*20, round(r.randint (-200, 200)/20)*20)
+
+snake.directions = "stop"
+
+def movement_snake () :
+    if snake.directions == "up" :
+        y = snake.ycor ()
+        snake.sety (y + 5)
+        check ()
+    if snake.directions == "down" :
+        y = snake.ycor ()
+        snake.sety (y - 5)
+        check ()
+    if snake.directions == "left" :
+        x = snake.xcor ()
+        snake.setx (x - 5)
+        check ()
+    if snake.directions == "right" :
+        x = snake.xcor ()
+        snake.setx (x + 5)
+        check ()
+
+def W ():
+    snake.directions = "up"
+    
+
+def A ():
+    snake.directions = "left"
+
+def S ():
+    snake.directions = "down"
+
+def D ():
+    snake.directions = "right"
 
 t.listen ()
 t.onkey (W, "w")
 t.onkey (A, "a")
 t.onkey (S, "s")
 t.onkey (D, "d")
+
+while True :
+    t.update ()
+    movement_snake ()
 
 t.mainloop ()
